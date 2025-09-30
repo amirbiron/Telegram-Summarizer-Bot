@@ -129,16 +129,29 @@ cp .env.example .env
 # ערוך את .env וצור בו:
 # - TELEGRAM_BOT_TOKEN=your_token_here
 # - ANTHROPIC_API_KEY=your_key_here
-# - MONGODB_URL=mongodb://localhost:27017
+# - MONGODB_URL=<ראה אפשרויות למטה>
 ```
 
 #### שלב 5: הרץ MongoDB
 
 ```bash
-# אופציה א': Docker
+# בחר אחת מהאפשרויות לחיבור MongoDB:
+
+# 1) MongoDB מקומי ללא אימות
+MONGODB_URL=mongodb://localhost:27017
+
+# 2) MongoDB מה-docker-compose של הפרויקט (מחשב מארח, עם אימות)
+#    משתמש: admin, סיסמה: changeme_strong_password, DB: telegram_summarizer
+MONGODB_URL=mongodb://admin:changeme_strong_password@localhost:27017/telegram_summarizer?authSource=admin
+
+# 3) MongoDB Atlas (ענן)
+MONGODB_URL=mongodb+srv://<user>:<password>@<cluster-url>/telegram_summarizer?retryWrites=true&w=majority
+
+# הפעלת MongoDB:
+# אופציה א': Docker (מהיר)
 docker run -d -p 27017:27017 --name mongodb mongo:7.0
 
-# אופציה ב': MongoDB מותקן מקומית
+# אופציה ב': mongod מותקן מקומית
 mongod
 ```
 
@@ -192,6 +205,10 @@ docker-compose down -v
 ```
 
 🎉 **הבוט רץ ב-Docker!**
+
+הערה חשובה:
+- כאשר מריצים את הבוט בתוך `docker-compose`, כתובת ה-DB כבר מוגדרת בקובץ `docker-compose.yml` ל-`mongodb://admin:changeme_strong_password@mongodb:27017/telegram_summarizer?authSource=admin` והבוט מתחבר לשירות `mongodb` דרך רשת ה-Docker, לא ל-`localhost`.
+- כאשר מריצים את הבוט מחוץ ל-Docker (מקומית), יש להשתמש ב-`localhost` או בקונקשן של Atlas לפי ההסבר למעלה.
 
 ---
 
