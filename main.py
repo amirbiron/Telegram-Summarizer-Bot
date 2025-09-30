@@ -23,6 +23,7 @@ See .env.example for all configuration options.
 """
 
 import asyncio
+import os
 import logging
 import sys
 from telegram import Update
@@ -32,6 +33,7 @@ from config import settings
 from database import init_db, close_db
 from handlers import setup_command_handlers, setup_message_handlers
 from utils.logger import setup_logging
+from utils.health_server import HealthServer
 
 # Setup logging
 logger = setup_logging()
@@ -85,6 +87,14 @@ async def post_shutdown(application: Application) -> None:
     logger.info("Starting bot shutdown...")
     
     try:
+        # Stop health server if running
+        try:
+            health_server = application.bot_data.get("health_server")
+            if isinstance(health_server, HealthServer):
+                health_server.stop()
+        except Exception:
+            pass
+
         # Close MongoDB connection
         await close_db()
         logger.info("Database connection closed")
@@ -148,6 +158,18 @@ def main() -> None:
             .build()
         )
         
+        # Start lightweight HTTP health server so Render detects an open port
+        port_env = os.environ.get("PORT")
+        try:
+            port = int(port_env) if port_env else int(settings.port)
+        except Exception:
+            port = int(settings.port)
+
+        health_server = HealthServer(port=port)
+        health_server.start()
+        application.bot_data["health_server"] = health_server
+        logger.info(f"Health server started on 0.0.0.0:{port}")
+
         # Register handlers
         setup_command_handlers(application)
         setup_message_handlers(application)
