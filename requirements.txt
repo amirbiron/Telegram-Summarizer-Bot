@@ -1,0 +1,26 @@
+# Core Framework
+python-telegram-bot[httpx]==22.4  # Latest Telegram bot framework with httpx
+httpx==0.28.1  # Modern HTTP client (async + sync)
+
+# AI/LLM
+anthropic==0.40.0  # Claude API client
+
+# Database - MongoDB
+motor==3.6.0  # Async MongoDB driver
+beanie==1.27.0  # ODM (Object Document Mapper) for MongoDB with Pydantic support
+pymongo==4.10.1  # MongoDB driver (used by Motor and Beanie)
+
+# Configuration & Environment
+python-dotenv==1.0.1  # Load .env files
+pydantic==2.10.3  # Data validation and settings management
+pydantic-settings==2.6.1  # Settings management with Pydantic
+
+# Utilities
+aiofiles==24.1.0  # Async file operations
+python-dateutil==2.9.0  # Date utilities
+
+# Development
+pytest==8.3.4  # Testing framework
+pytest-asyncio==0.24.0  # Async support for pytest
+black==24.10.0  # Code formatter
+ruff==0.8.4  # Fast Python linter
