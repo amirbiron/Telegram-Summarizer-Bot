@@ -21,7 +21,7 @@ class ClaudeAIService:
     
     Handles:
     - Summary generation from messages
-    - Different summary styles (standard, quick, detailed, etc.)
+    - Different summary styles (standard, quick, detailed, decisions, questions)
     - Error handling and retries
     """
     
@@ -344,3 +344,4 @@ If all questions answered, write: "All questions were answered.""",
         except Exception as e:
             logger.error(f"Claude API connection test failed: {e}")
             return False
+
